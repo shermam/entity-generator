@@ -19,5 +19,13 @@
     "msnodesqlv8": "^0.6.6",
     "mssql": "^4.1.0"
   },
-  "devDependencies": {}
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shermam/entity-generator.git"
+  },
+  "bugs": {
+    "url": "https://github.com/shermam/entity-generator/issues"
+  },
+  "homepage": "https://github.com/shermam/entity-generator#readme"
 }
