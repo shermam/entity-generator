@@ -6,7 +6,7 @@ module.exports = class Entity {
         this.tableName = schema.tableName;
         this.info = info && info[schema.tableName] ? info[schema.tableName] : null;
         this.className = this.getClassName(schema.tableName);
-        this.Properties = schema.columns.map(c => new Property(c, this.info));
+        this.Properties = this.getProperties(schema.columns);
         this.inRelations = (schema.inRelations || []).map(r => new Relation(r, info));
         this.outRelations = (schema.outRelations || []).map(r => new Relation(r, info));
     }
@@ -21,6 +21,16 @@ module.exports = class Entity {
         }
 
         return util.toPascalCase(tableName);
+    }
+
+    getProperties(columns) {
+        const properties = [];
+
+        for (let key in columns) {
+            properties.push(new Property(columns[key], this.info));
+        }
+
+        return properties;
     }
 }
 

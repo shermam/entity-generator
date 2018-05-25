@@ -4,7 +4,7 @@ module.exports = class Schema {
     constructor(connectionString) {
         this.db = new Database(connectionString);
         this.getSchemasQuery = `
-           select distinct
+           select
             T.TABLE_NAME,
             C.COLUMN_NAME,
             C.DATA_TYPE,
@@ -16,7 +16,6 @@ module.exports = class Schema {
             INNER JOIN INFORMATION_SCHEMA.TABLES T ON T.TABLE_NAME = C.TABLE_NAME
             LEFT OUTER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE U ON U.COLUMN_NAME = C.COLUMN_NAME AND U.TABLE_NAME = C.TABLE_NAME
             where T.TABLE_TYPE = 'BASE TABLE'
-            ORDER BY T.TABLE_NAME
         `;
 
         this.getRelationsQuery = `
@@ -81,8 +80,8 @@ module.exports = class Schema {
 
 function resultToMap(array) {
     return array.reduce((p, c) => {
-        p[c.TABLE_NAME] = p[c.TABLE_NAME] || { tableName: c.TABLE_NAME, columns: [] };
-        p[c.TABLE_NAME].columns.push(c);
+        p[c.TABLE_NAME] = p[c.TABLE_NAME] || { tableName: c.TABLE_NAME, columns: {} };
+        p[c.TABLE_NAME].columns[c.COLUMN_NAME] = c;
         return p;
     }, {});
 }
