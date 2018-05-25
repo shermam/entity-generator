@@ -1,0 +1,22 @@
+{
+  "name": "entity-generator",
+  "version": "1.0.0",
+  "description": "Generates C# entity classes from database",
+  "main": "./src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "entity",
+    "sql server"
+  ],
+  "bin": {
+    "egen": "./src/index.js"
+  },
+  "author": "Shermam Miranda",
+  "license": "MIT",
+  "dependencies": {
+    "msnodesqlv8": "^0.6.6",
+    "mssql": "^4.1.0"
+  }
+}
