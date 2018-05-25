@@ -17,7 +17,8 @@
   "license": "MIT",
   "dependencies": {
     "msnodesqlv8": "^0.6.6",
-    "mssql": "^4.1.0"
+    "mssql": "^4.1.0",
+    "xml2js": "^0.4.19"
   },
   "devDependencies": {},
   "repository": {

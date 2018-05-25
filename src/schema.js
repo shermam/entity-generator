@@ -4,7 +4,7 @@ module.exports = class Schema {
     constructor(connectionString) {
         this.db = new Database(connectionString);
         this.getSchemasQuery = `
-           select
+           select distinct
             T.TABLE_NAME,
             C.COLUMN_NAME,
             C.DATA_TYPE,
@@ -20,7 +20,7 @@ module.exports = class Schema {
         `;
 
         this.getRelationsQuery = `
-            SELECT
+            SELECT distinct
             tab1.name AS [table],
             col1.name AS [column], 
             tab2.name AS [referenced_table], 
@@ -42,7 +42,10 @@ module.exports = class Schema {
     }
 
     getSchemas() {
-        return Promise.all([this.getColumns(), this.getRelations()])
+        return Promise.all([
+            this.getColumns(),
+            this.getRelations()
+        ])
             .then(this.mapRelations)
             .then(mapToArray);
     }
