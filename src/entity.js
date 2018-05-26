@@ -82,9 +82,7 @@ class Relation {
         let name = null;
 
         if (this.info && this.info[tableName]) {
-            const cols = this.info[tableName].columns;
-
-            for (let c of cols) {
+            for (let c of this.info[tableName].columns) {
                 if (c.code === columnName) {
                     name = c.name;
                     break;

@@ -40,7 +40,7 @@ function renderProperty(c) {
 
 function renderInRelation(r) {
     return [
-        `[ForeignKey("${r.refColumn}")]`,
+        `[ForeignKey("${r.column}")]`,
         `public virtual ${r.refClass} ${r.refClass} { get; set; }`
     ].map(line => '\t\t' + line)
         .join('\n');
