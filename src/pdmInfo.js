@@ -58,7 +58,8 @@ function formatColumn(c) {
 
 function getFormattedName(obj) {
     return removeDiacritics(getByName(obj, 'Name')[0])
-        .replace(/ /g, "");
+        .replace(/ /g, "")
+        .replace(/\W/g, "");
 }
 
 function getByName(obj, name) {

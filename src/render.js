@@ -4,6 +4,7 @@ module.exports = function (entity) {
     return `namespace ${namespace}
 {
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
@@ -41,7 +42,7 @@ function renderProperty(c) {
 function renderInRelation(r) {
     return [
         `[ForeignKey("${r.column}")]`,
-        `public virtual ${r.refClass} ${r.refClass} { get; set; }`
+        `public virtual ${r.refClass} ${r.refProp} { get; set; }`
     ].map(line => '\t\t' + line)
         .join('\n');
 }
@@ -49,11 +50,11 @@ function renderInRelation(r) {
 function renderOutRelation(r) {
     return [
         `[ForeignKey("${r.column}")]`,
-        `public virtual ICollection<${r.class}> List${r.class} { get; set; }`
+        `public virtual ICollection<${r.class}> List${r.prop} { get; set; }`
     ].map(line => '\t\t' + line)
         .join('\n');
 }
 
 function renderOutRelationInit(r) {
-    return `\t\t\tList${r.class} = new HashSet<${r.class}>();`;
+    return `\t\t\tList${r.prop} = new HashSet<${r.class}>();`;
 }

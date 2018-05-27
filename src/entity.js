@@ -9,6 +9,9 @@ module.exports = class Entity {
         this.Properties = this.getProperties(schema.columns);
         this.inRelations = (schema.inRelations || []).map(r => new Relation(r, info));
         this.outRelations = (schema.outRelations || []).map(r => new Relation(r, info));
+
+        this.disambiguateRelations(this.inRelations, 'refProp');
+        this.disambiguateRelations(this.outRelations, 'prop');
     }
 
     render() {
@@ -31,6 +34,53 @@ module.exports = class Entity {
         }
 
         return properties;
+    }
+
+    disambiguateRelations(relations, prop) {
+        const ambiguousProp = this.getAmiguousMap(relations, prop);
+        this.addSuffix(relations, ambiguousProp, prop);
+    }
+
+    addSuffix(relations, ambiguousMap, prop) {
+        for (const key in ambiguousMap) {
+            const ambiguousRelations = relations
+                .filter(r => r[prop] === key);
+
+            let suffixIndex = 0;
+
+            letterLoop: while (true) {
+                const currentLetter = ambiguousRelations[0].column[suffixIndex];
+                for (let i = 1; i < ambiguousRelations.length; i++) {
+                    if (
+                        ambiguousRelations[i].column[suffixIndex] !== currentLetter ||
+                        !ambiguousRelations[i].column[suffixIndex]
+                    ) {
+                        break letterLoop;
+                    }
+                }
+                suffixIndex++;
+            }
+
+            ambiguousRelations.forEach(relation => {
+                const suffix = relation.column.substring(suffixIndex);
+                relation[prop] += suffix;
+            });
+        }
+    }
+
+    getAmiguousMap(relations, prop) {
+        const counts = relations.reduce((p, c) => {
+            p[c[prop]] = (p[c[prop]] || 0) + 1;
+            return p;
+        }, {});
+
+        for (const key in counts) {
+            if (counts[key] === 1) {
+                delete counts[key];
+            }
+        }
+
+        return counts;
     }
 }
 
@@ -69,6 +119,8 @@ class Relation {
         this.column = this.getColumnName(r.table, r.column);
         this.refClass = this.getClassName(r.referenced_table);
         this.refColumn = this.getColumnName(r.referenced_table, r.referenced_column);
+        this.prop = this.class === this.refClass ? this.class + this.column : this.class;
+        this.refProp = this.class === this.refClass ? this.refClass + this.column : this.refClass;
     }
 
     getClassName(tableName) {
