@@ -56,7 +56,7 @@ This generator does not create the folder for the entities. You have to create t
 
 Node version 8.11.2 or higher is required.
 
-Running this generator will not add Entity Framework to your projec. You will have add it your self and then run the generator just to create the classes
+Running this generator will not add Entity Framework to your project. You will have add it your self and then run the generator just to create the classes
 
 
 Suggestions and help are welcome.
