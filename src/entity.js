@@ -1,5 +1,4 @@
 const util = require('./util.js');
-const render = require('./render');
 
 module.exports = class Entity {
     constructor(schema, info) {
@@ -12,10 +11,6 @@ module.exports = class Entity {
 
         this.disambiguateRelations(this.inRelations, 'refProp');
         this.disambiguateRelations(this.outRelations, 'prop');
-    }
-
-    render() {
-        return render(this);
     }
 
     getClassName(tableName) {

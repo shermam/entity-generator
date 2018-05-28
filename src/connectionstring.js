@@ -1,14 +1,10 @@
-const defaultConnectionString = "Password=ihm@123;Persist Security Info=True;User ID=sa;Initial Catalog=PF_PRD;Data Source=LOCALHOST\\SQLEXPRESS";
+// module.exports = function () {
+//     return convertConnectionString(process.argv.find(arg => {
+//         return arg.startsWith('source=');
+//     }).replace('source=', ''));
+// }
 
-module.exports = function () {
-    return convertConnectionString((process.argv.find(arg => {
-        return arg.startsWith('source=');
-    }) || defaultConnectionString).replace('source=', ''));
-}
-
-//"server=LOCALHOST\\SQLEXPRESS;Database=PF_PRD;Trusted_Connection=Yes;Driver={SQL Server Native Client 11.0}"
-
-function convertConnectionString(connectionString) {
+module.exports = function convertConnectionString(connectionString) {
     const config = getConfig(connectionString);
     return `server=${config.server};Database=${config.database};Trusted_Connection=Yes;Driver={SQL Server Native Client 11.0}`;
 }

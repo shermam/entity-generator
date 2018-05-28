@@ -1,7 +1,6 @@
-const namespace = require('./namespace')();
-
-module.exports = function (entity) {
-    return `namespace ${namespace}
+module.exports = function (namespace) {
+    return function (entity) {
+        return `namespace ${namespace}
 {
     using System;
     using System.Collections.Generic;
@@ -22,8 +21,8 @@ ${entity.inRelations.map(renderInRelation).join('\n\n')}
 
 ${entity.outRelations.map(renderOutRelation).join('\n\n')}
     }
-}
-    `;
+}`;
+    }
 }
 
 function renderProperty(c) {

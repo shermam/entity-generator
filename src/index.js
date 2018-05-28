@@ -4,29 +4,39 @@ const util = require('util');
 const fs = require('fs');
 const writeFile = util.promisify(fs.writeFile);
 const Entity = require('./entity');
-const connectionString = require('./connectionstring')();
 const Schema = require('./schema');
-const schema = new Schema(connectionString);
 const pdmInfo = require('./pdmInfo');
+const convertConnectionString = require('./connectionstring');
+const renderFactory = require('./render');
+const getConfig = require('./config');
 
-console.log('Conectando ao banco de dados...');
+getConfig().then(config => {
 
-schema
-    .getSchemas()
-    .then(generate)
-    .then(r => console.log('Arquivos gerados!'));
+    const render = renderFactory(config.namespace);
+    const entitiesFolder = config.entitiesFolder;
+    const connectionstring = convertConnectionString(config.source);
+    const schema = new Schema(connectionstring);
 
-function generate(result) {
+    console.log('Conectando ao banco de dados...');
 
-    return pdmInfo().then(info => {
-        const retorno = result
-            .map(t => new Entity(t, info))
-            .map(e => {
-                console.log(`Gerando arquivo ${e.className}.cs`);
-                return writeFile(`${e.className}.cs`, e.render());
-            });
+    schema
+        .getSchemas()
+        .then(generate)
+        .then(r => console.log('Arquivos gerados!'));
 
-        return Promise.all(retorno);
-    });
+    function generate(result) {
 
-}
+        return pdmInfo(config.pdmFile).then(info => {
+            const retorno = result
+                .map(t => new Entity(t, info))
+                .map(e => {
+                    console.log(`Gerando arquivo ${e.className}.cs`);
+                    return writeFile(`${entitiesFolder || '.'}/${e.className}.cs`, render(e));
+                });
+
+            return Promise.all(retorno);
+        });
+
+    }
+
+});

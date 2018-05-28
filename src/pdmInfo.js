@@ -6,8 +6,8 @@ const writeFile = util.promisify(fs.writeFile);
 const readFile = util.promisify(fs.readFile);
 const parseString = util.promisify(parser.parseString);
 
-module.exports = function () {
-    return readFile('db.pdm', 'utf8')
+module.exports = function (fileName) {
+    return readFile(fileName, 'utf8')
         .then(parseString)
         .then(getPdmInfo)
         .catch(e => null);
