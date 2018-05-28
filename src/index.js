@@ -39,4 +39,4 @@ getConfig().then(config => {
 
     }
 
-});
+}).catch(console.log);
