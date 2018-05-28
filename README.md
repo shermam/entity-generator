@@ -39,7 +39,7 @@ egen
 
 ```json
 {
-    "source": "Password=YOUR_PASSWORD;Persist Security Info=True;User ID=YOUR_DB_USER;Initial Catalog=YOUR_DATABASE;Data Source=YOUR_SERVER\YOUR_NAMED_INSTANCE",
+    "source": "Password=YOUR_PASSWORD;Persist Security Info=True;User ID=YOUR_DB_USER;Initial Catalog=YOUR_DATABASE;Data Source=YOUR_SERVER\\YOUR_NAMED_INSTANCE",
     "namespace": "YourNamespace",
     "entitiesFolder": "YouEntitiesFolder",
     "pdmFile": "YourPdmFile.pdm",
