@@ -9,9 +9,11 @@ const pdmInfo = require('./pdmInfo');
 const convertConnectionString = require('./connectionstring');
 const renderFactory = require('./render');
 const getConfig = require('./config');
+const renderContextFactory = require('./renderContext');
 
 getConfig().then(config => {
 
+    const renderContext = renderContextFactory(config.sourceName, config.namespace);
     const render = renderFactory(config.namespace);
     const entitiesFolder = config.entitiesFolder;
     const connectionstring = convertConnectionString(config.source);
@@ -27,14 +29,21 @@ getConfig().then(config => {
     function generate(result) {
 
         return pdmInfo(config.pdmFile).then(info => {
-            const retorno = result
-                .map(t => new Entity(t, info))
-                .map(e => {
-                    console.log(`Gerando arquivo ${e.className}.cs`);
-                    return writeFile(`${entitiesFolder || '.'}/${e.className}.cs`, render(e));
-                });
+            const entities = result.map(t => new Entity(t, info))
 
-            return Promise.all(retorno);
+            console.log('Gerando arquivo Context...');
+            const retornoContext = writeFile('Context.cs', renderContext(entities));
+
+            const retornoEntidades = entities.map(e => {
+                console.log(`Gerando arquivo ${e.className}.cs`);
+                return writeFile(`${entitiesFolder || '.'}/${e.className}.cs`, render(e));
+            });
+
+
+            return Promise.all([
+                retornoContext,
+                ...retornoEntidades
+            ]);
         });
 
     }

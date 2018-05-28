@@ -24,6 +24,8 @@ function createConfig() {
         .then(res => config.pdmFile = res)
         .then(_ => readLine.question('Entre com o nome do arquivo de projeto:'))
         .then(res => config.projectFile = res)
+        .then(_ => readLine.question('Entre com o nome da connectionString no app.config:'))
+        .then(res => config.sourceName = res)
         .then(_ => console.log(JSON.stringify(config, null, '  ')))
         .then(_ => readLine.close())
         .then(_ => writeConfigFile(config))

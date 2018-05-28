@@ -3,5 +3,6 @@
     "namespace": "PostoFacil.DataAcces",
     "entitiesFolder": "Entidades",
     "pdmFile": "Posto Fácil V6.pdm",
-    "projectFile": "PostoFacil.DataAcces.csproj"
+    "projectFile": "PostoFacil.DataAcces.csproj",
+    "sourceName": "PostoFacilEntity"
 }
