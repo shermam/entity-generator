@@ -31,7 +31,7 @@ function renderProperty(c) {
         `${c.isPrimaryKey ? '[Key]' : ''}`,
         `${c.isIdentity ? '[DatabaseGenerated(DatabaseGeneratedOption.Identity)]' : ''}`,
         `${!c.isNullable && c.type.nullability === 'annotation' ? '[Required]' : ''}`,
-        `${c.type.lengthInfo && c.size ? `[${c.type.lengthInfo}(${c.size})]` : ''}`,
+        `${c.type.lengthInfo && c.size > 0 ? `[${c.type.lengthInfo}(${c.size})]` : ''}`,
         `[Column("${c.columnName}"${c.type.typeName ? `, TypeName = "${c.type.typeName}"` : ''})]`,
         `public ${c.type.csharpType}${c.isNullable && c.type.nullability === 'questionMark' ? '?' : ''} ${c.propertyName} { get; set; }`
     ].filter(line => line)

@@ -46,20 +46,7 @@ module.exports = class Entity {
             const ambiguousRelations = relations
                 .filter(r => r[prop] === key);
 
-            let suffixIndex = 0;
-
-            letterLoop: while (true) {
-                const currentLetter = ambiguousRelations[0].column[suffixIndex];
-                for (let i = 1; i < ambiguousRelations.length; i++) {
-                    if (
-                        ambiguousRelations[i].column[suffixIndex] !== currentLetter ||
-                        !ambiguousRelations[i].column[suffixIndex]
-                    ) {
-                        break letterLoop;
-                    }
-                }
-                suffixIndex++;
-            }
+            const suffixIndex = getSuffixIndex(ambiguousRelations.map(r => r.column));
 
             ambiguousRelations.forEach(relation => {
                 const suffix = relation.column.substring(suffixIndex);
@@ -82,6 +69,25 @@ module.exports = class Entity {
 
         return counts;
     }
+}
+
+function getSuffixIndex(array) {
+    let suffixIndex = 0;
+
+    letterLoop: while (true) {
+        const currentLetter = array[0][suffixIndex];
+        for (let i = 1; i < array.length; i++) {
+            if (
+                array[i][suffixIndex] !== currentLetter ||
+                !array[i][suffixIndex]
+            ) {
+                break letterLoop;
+            }
+        }
+        suffixIndex++;
+    }
+
+    return suffixIndex;
 }
 
 class Property {
@@ -119,8 +125,26 @@ class Relation {
         this.column = this.getColumnName(r.table, r.column);
         this.refClass = this.getClassName(r.referenced_table);
         this.refColumn = this.getColumnName(r.referenced_table, r.referenced_column);
-        this.prop = this.class === this.refClass ? this.class + this.column : this.class;
-        this.refProp = this.class === this.refClass ? this.refClass + this.column : this.refClass;
+        this.prop = this.getProp();
+        this.refProp = this.getRefProp();
+    }
+
+    getProp() {
+        if (this.class === this.refClass) {
+            const suffix = this.column.substring(getSuffixIndex([this.column, this.refColumn]));
+            return this.class + suffix;
+        }
+
+        return this.class;
+    }
+
+    getRefProp() {
+        if (this.class === this.refClass) {
+            const suffix = this.column.substring(getSuffixIndex([this.column, this.refColumn]));
+            return this.class + suffix;
+        }
+
+        return this.refClass;
     }
 
     getClassName(tableName) {
