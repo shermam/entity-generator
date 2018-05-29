@@ -95,6 +95,7 @@ class Property {
         this.size = columnSchema.CHARACTER_MAXIMUM_LENGTH;
         this.isNullable = columnSchema.IS_NULLABLE === 'YES';
         this.isPrimaryKey = !!columnSchema.IS_PRIMARY_KEY;
+        this.order = columnSchema.ORDINAL_POSITION ? parseInt(columnSchema.ORDINAL_POSITION) : null;
     }
 
     getPropertyName(columnName) {

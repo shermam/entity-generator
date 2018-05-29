@@ -28,10 +28,10 @@ ${entity.outRelations.map(renderOutRelation).join('\n\n')}
 function renderProperty(c) {
     return [
         `${c.isPrimaryKey ? '[Key]' : ''}`,
-        `${c.isIdentity ? '[DatabaseGenerated(DatabaseGeneratedOption.Identity)]' : ''}`,
+        `${c.isIdentity ? '[DatabaseGenerated(DatabaseGeneratedOption.Identity)]' : `${c.isPrimaryKey ? '[DatabaseGenerated(DatabaseGeneratedOption.None)]' : ''}`}`,
         `${!c.isNullable && c.type.nullability === 'annotation' ? '[Required]' : ''}`,
         `${c.type.lengthInfo && c.size > 0 ? `[${c.type.lengthInfo}(${c.size})]` : ''}`,
-        `[Column("${c.columnName}"${c.type.typeName ? `, TypeName = "${c.type.typeName}"` : ''})]`,
+        `[Column("${c.columnName}"${c.type.typeName ? `, TypeName = "${c.type.typeName}"` : ''}${c.order ? `, Order = ${c.order - 1}` : ''})]`,
         `public ${c.type.csharpType}${c.isNullable && c.type.nullability === 'questionMark' ? '?' : ''} ${c.propertyName} { get; set; }`
     ].filter(line => line)
         .map(line => '\t\t' + line)
