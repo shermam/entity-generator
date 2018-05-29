@@ -10,6 +10,7 @@ const convertConnectionString = require('./connectionstring');
 const renderFactory = require('./render');
 const getConfig = require('./config');
 const renderContextFactory = require('./renderContext');
+const csprojLoader = require('./csprojLoader');
 
 getConfig().then(config => {
 
@@ -39,8 +40,11 @@ getConfig().then(config => {
                 return writeFile(`${entitiesFolder || '.'}/${e.className}.cs`, render(e));
             });
 
+            console.log('Reescrevendo project file');
+            const retornoProj = csprojLoader(config.projectFile, entities, config.entitiesFolder);
 
             return Promise.all([
+                retornoProj,
                 retornoContext,
                 ...retornoEntidades
             ]);
