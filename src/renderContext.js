@@ -12,8 +12,8 @@ module.exports = function (sourceName, namespace) {
         public Context()
             : base("name=${sourceName}")
         {
-            //this.Configuration.ProxyCreationEnabled = false;
-            //this.Configuration.LazyLoadingEnabled = false;
+            this.Configuration.ProxyCreationEnabled = false;
+            this.Configuration.LazyLoadingEnabled = false;
         }
 
 ${renderDbSet(entities)}
