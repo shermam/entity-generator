@@ -56,7 +56,9 @@ This generator does not create the folder for the entities. You have to create t
 
 Node version 8.11.2 or higher is required.
 
-Running this generator will not add Entity Framework to your project. You will have add it your self and then run the generator just to create the classes
+Running this generator will not add Entity Framework to your project. You will have add it your self and then run the generator just to create the classes.
+
+As this generator was made to generate classes for a web api the lazy loading option on the context class is generated as disabled, because when serializing the class to JSON with lazy load there was a outOfMemoryException being thrown.
 
 
 Suggestions and help are welcome.
