@@ -1,6 +1,6 @@
 {
   "name": "entity-generator",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Generates C# entity classes from database",
   "main": "./src/index.js",
   "scripts": {
@@ -18,6 +18,7 @@
   "dependencies": {
     "msnodesqlv8": "^0.6.6",
     "mssql": "^4.1.0",
+    "pdm-to-json": "^1.0.0",
     "xml2js": "^0.4.19"
   },
   "devDependencies": {},

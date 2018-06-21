@@ -2,10 +2,10 @@
 
 const util = require('util');
 const fs = require('fs');
+const pdmInfo = require('pdm-to-json');
 const writeFile = util.promisify(fs.writeFile);
 const Entity = require('./entity');
 const Schema = require('./schema');
-const pdmInfo = require('./pdmInfo');
 const convertConnectionString = require('./connectionstring');
 const renderFactory = require('./render');
 const getConfig = require('./config');
