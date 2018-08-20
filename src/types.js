@@ -23,6 +23,12 @@ module.exports = {
         "lengthInfo": "",
         "typeName": ""
     },
+    "time": {
+        "csharpType": "TimeSpan",
+        "nullability": "questionMark",
+        "lengthInfo": "",
+        "typeName": ""
+    },
     "decimal": {
         "csharpType": "decimal",
         "nullability": "questionMark",

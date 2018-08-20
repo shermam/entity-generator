@@ -8,6 +8,9 @@ exports.toPascalCase = function (str) {
 }
 
 exports.sqlTypeToCSharpType = function (type) {
+
+    if (!types[type]) throw new Error(`Unknown type: ${type}`);
+
     return types[type];
 }
 
