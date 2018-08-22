@@ -30,7 +30,10 @@ getConfig().then(config => {
     function generate(result) {
 
         return pdmInfo(config.pdmFile).then(info => {
-            const entities = result.map(t => new Entity(t, info))
+
+            const entities = result.map(t => new Entity(t, info));
+
+            //writeFile("pdm.json", JSON.stringify(info, null, '  '));
 
             console.log('Gerando arquivo Context...');
             const retornoContext = writeFile('Context.cs', renderContext(entities));

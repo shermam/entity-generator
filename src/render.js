@@ -10,6 +10,9 @@ module.exports = function (namespace) {
     [Table("${entity.tableName}")]
     public partial class ${entity.className}
     {
+
+${entity.Properties.reduce(renderConstants, []).join('\n')}
+
         public ${entity.className}()
         {
 ${entity.outRelations.map(renderOutRelationInit).join('\n')}
@@ -23,6 +26,19 @@ ${entity.outRelations.map(renderOutRelation).join('\n\n')}
     }
 }`;
     }
+}
+
+
+function renderConstants(constants, property) {
+
+    if (!property.listOfValues) return constants;
+
+    constants = constants.concat(property.listOfValues.map(value => {
+        const quotedValue = property.type.csharpType === "string" ? `"${value.code}"` : value.code;
+        return `\t\tpublic const ${property.type.csharpType} ${property.constantName + "_" + value.constantName} = ${quotedValue};`;
+    }));
+
+    return constants;
 }
 
 function renderProperty(c) {

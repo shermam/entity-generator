@@ -89,6 +89,8 @@ class Property {
     constructor(columnSchema, info) {
         this.columnName = columnSchema.COLUMN_NAME;
         this.info = this.getInfo(info);
+        this.constantName = this.info ? this.info.constantName : null;
+        this.listOfValues = this.info ? this.info.listOfValues : null;
         this.propertyName = this.getPropertyName(columnSchema.COLUMN_NAME);
         this.type = util.sqlTypeToCSharpType(columnSchema.DATA_TYPE);
         this.isIdentity = !!columnSchema.IS_IDENTITY;
