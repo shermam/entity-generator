@@ -9,11 +9,11 @@ module.exports = function (sourceName, namespace) {
 
     public partial class Context : DbContext
     {
-        public Context()
+        public Context(bool lazy = false)
             : base("name=${sourceName}")
         {
-            this.Configuration.ProxyCreationEnabled = false;
-            this.Configuration.LazyLoadingEnabled = false;
+            this.Configuration.ProxyCreationEnabled = lazy;
+            this.Configuration.LazyLoadingEnabled = lazy;
         }
 
 ${renderDbSet(entities)}
