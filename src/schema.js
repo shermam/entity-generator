@@ -1,9 +1,9 @@
-const Database = new require('./database');
+const Database = new require("./database");
 
 module.exports = class Schema {
-    constructor(connectionString) {
-        this.db = new Database(connectionString);
-        this.getSchemasQuery = `
+  constructor(connectionString) {
+    this.db = new Database(connectionString);
+    this.getSchemasQuery = `
             select
             T.TABLE_NAME,
             C.COLUMN_NAME,
@@ -12,7 +12,8 @@ module.exports = class Schema {
             C.CHARACTER_MAXIMUM_LENGTH,
             C.IS_NULLABLE,
             ISNULL(OBJECTPROPERTY(OBJECT_ID(U.CONSTRAINT_SCHEMA + '.' + QUOTENAME(U.CONSTRAINT_NAME)), 'IsPrimaryKey'),0) as IS_PRIMARY_KEY,
-            U.ORDINAL_POSITION
+            U.ORDINAL_POSITION,
+            T.TABLE_SCHEMA
             from information_schema.COLUMNS C
             INNER JOIN INFORMATION_SCHEMA.TABLES T ON T.TABLE_NAME = C.TABLE_NAME
             LEFT OUTER JOIN INFORMATION_SCHEMA.TABLE_CONSTRAINTS TC ON (TC.CONSTRAINT_TYPE = 'PRIMARY KEY' AND TC.TABLE_NAME = T.TABLE_NAME)
@@ -20,7 +21,7 @@ module.exports = class Schema {
             where T.TABLE_TYPE = 'BASE TABLE'
         `;
 
-        this.getRelationsQuery = `
+    this.getRelationsQuery = `
             SELECT distinct
             tab1.name AS [table],
             col1.name AS [column], 
@@ -40,59 +41,64 @@ module.exports = class Schema {
         INNER JOIN sys.columns col2 
             ON col2.column_id = referenced_column_id AND col2.object_id = tab2.object_id 
         `;
-    }
+  }
 
-    getSchemas() {
-        return Promise.all([
-            this.getColumns(),
-            this.getRelations()
-        ])
-            .then(this.mapRelations)
-            .then(mapToArray);
-    }
+  getSchemas() {
+    console.log("Getting schema information...");
 
-    getRelations() {
-        return this.db.query(this.getRelationsQuery);
-    }
+    return Promise.all([this.getColumns(), this.getRelations()])
+      .then(this.mapRelations)
+      .then(mapToArray)
+      .catch(console.log);
+  }
 
-    getColumns() {
-        return this.db.query(this.getSchemasQuery)
-            .then(resultToMap);
-    }
+  getRelations() {
+    return this.db.query(this.getRelationsQuery);
+  }
 
-    mapRelations([tables, relations]) {
-        if (!relations) return tables;
+  getColumns() {
+    return this.db.query(this.getSchemasQuery).then(resultToMap);
+  }
 
-        relations.forEach(r => {
-            if (tables[r.table]) {
-                tables[r.table].inRelations = tables[r.table].inRelations || [];
-                tables[r.table].inRelations.push(r);
-            }
+  mapRelations([tables, relations]) {
+    if (!relations) return tables;
+    console.log("Mapping relations...");
 
-            if (tables[r.referenced_table]) {
-                tables[r.referenced_table].outRelations = tables[r.referenced_table].outRelations || [];
-                tables[r.referenced_table].outRelations.push(r);
-            }
-        });
-        return tables;
-    }
+    relations.forEach(r => {
+      if (tables[r.table]) {
+        tables[r.table].inRelations = tables[r.table].inRelations || [];
+        tables[r.table].inRelations.push(r);
+      }
 
-}
-
+      if (tables[r.referenced_table]) {
+        tables[r.referenced_table].outRelations =
+          tables[r.referenced_table].outRelations || [];
+        tables[r.referenced_table].outRelations.push(r);
+      }
+    });
+    return tables;
+  }
+};
 
 function resultToMap(array) {
-    return array.reduce((p, c) => {
-        p[c.TABLE_NAME] = p[c.TABLE_NAME] || { tableName: c.TABLE_NAME, columns: {} };
-        p[c.TABLE_NAME].columns[c.COLUMN_NAME] = c;
-        return p;
-    }, {});
+  console.log("Mapping result...");
+
+  return array.reduce((p, c) => {
+    p[c.TABLE_NAME] = p[c.TABLE_NAME] || {
+      tableName: c.TABLE_NAME,
+      tableSchema: c.TABLE_SCHEMA,
+      columns: {}
+    };
+    p[c.TABLE_NAME].columns[c.COLUMN_NAME] = c;
+    return p;
+  }, {});
 }
 
 function mapToArray(map) {
-    const array = [];
-    for (const key in map) {
-        const element = map[key];
-        array.push(element);
-    }
-    return array;
+  const array = [];
+  for (const key in map) {
+    const element = map[key];
+    array.push(element);
+  }
+  return array;
 }
