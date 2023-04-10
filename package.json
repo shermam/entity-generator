@@ -19,7 +19,7 @@
     "msnodesqlv8": "^0.6.7",
     "mssql": "^4.1.0",
     "pdm-to-json": "^1.2.0",
-    "xml2js": "^0.4.19"
+    "xml2js": "^0.5.0"
   },
   "devDependencies": {},
   "repository": {
